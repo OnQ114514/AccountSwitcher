@@ -1,11 +1,12 @@
 {
   "schemaVersion": 1,
-  "id": "accountswitcher",
+  "id": "account_switcher",
   "version": "1.0.0",
   "name": "Account Switcher",
   "description": "",
   "authors": [
-    "IAFEnvoy"
+    "IAFEnvoy",
+    "ThymeChen"
   ],
   "license": "GPL-3.0",
   "environment": "client",

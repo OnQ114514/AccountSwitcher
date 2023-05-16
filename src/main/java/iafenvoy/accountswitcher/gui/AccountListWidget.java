@@ -9,7 +9,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class AccountListWidget extends AlwaysSelectedEntryListWidget<AccountListWidget.Entry> {
     private final AccountScreen screen;
@@ -49,7 +48,7 @@ public class AccountListWidget extends AlwaysSelectedEntryListWidget<AccountList
     @Override
     public void setSelected(@Nullable AccountListWidget.Entry entry) {
         super.setSelected(entry);
-        client.getNarratorManager().narrate((Text.translatable("narrator.select", ((AccountEntry) Objects.requireNonNull(this.getSelectedOrNull())).account.getUsername())).getString());
+//        client.getNarratorManager().narrate((Text.translatable("narrator.select", ((AccountEntry) Objects.requireNonNull(this.getSelectedOrNull())).account.getUsername())).getString());
     }
 
     @Override
@@ -73,7 +72,9 @@ public class AccountListWidget extends AlwaysSelectedEntryListWidget<AccountList
         @Override
         public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
             client.textRenderer.draw(matrices, this.account.getUsername(), (float) (x + 32 + 3), (float) (y + 1), 16777215);
-            client.textRenderer.draw(matrices, this.account.getType().getName(), (float) (x + 32 + 3), (float) (y + 1 + 9), 16777215);
+            client.textRenderer.draw(matrices,
+                    this.account.getType().getName() + (this.account.getAlias().equals("") ? ("") : (" - " + this.account.getAlias())),
+                    (float) (x + 32 + 3), (float) (y + 1 + 9), 16777215);
             client.textRenderer.draw(matrices, this.account.getUuid(), (float) (x + 32 + 3), (float) (y + 1 + 18), 16777215);
         }
 

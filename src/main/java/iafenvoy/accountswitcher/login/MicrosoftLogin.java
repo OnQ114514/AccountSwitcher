@@ -134,7 +134,7 @@ public class MicrosoftLogin implements ILogin{
         map.add(Pair.of("scope", "service::user.auth.xboxlive.com::MBI_SSL"));
 
         String data = NetworkUtil.getDataWithForm("https://login.live.com/oauth20_token.srf", map);
-        JsonObject json = new JsonParser().parse(data).getAsJsonObject();
+        JsonObject json = JsonParser.parseString(data).getAsJsonObject();
         this.accessToken = json.get("access_token").getAsString();
         this.refreshToken = json.get("refresh_token").getAsString();
     }
@@ -155,7 +155,7 @@ public class MicrosoftLogin implements ILogin{
         root.addProperty("TokenType", "JWT");
 
         String data = NetworkUtil.getDataWithJson("https://user.auth.xboxlive.com/user/authenticate", root);
-        JsonObject json = new JsonParser().parse(data).getAsJsonObject();
+        JsonObject json = JsonParser.parseString(data).getAsJsonObject();
         this.xblToken = json.get("Token").getAsString();
         this.userHash = json.get("DisplayClaims").getAsJsonObject().get("xui").getAsJsonArray().get(0).getAsJsonObject().get("uhs").getAsString();
     }
@@ -177,7 +177,7 @@ public class MicrosoftLogin implements ILogin{
         root.addProperty("TokenType", "JWT");
 
         String data = NetworkUtil.getDataWithJson("https://xsts.auth.xboxlive.com/xsts/authorize", root);
-        JsonObject json = new JsonParser().parse(data).getAsJsonObject();
+        JsonObject json = JsonParser.parseString(data).getAsJsonObject();
         this.xstsToken = json.get("Token").getAsString();
     }
 
@@ -193,7 +193,7 @@ public class MicrosoftLogin implements ILogin{
         root.addProperty("identityToken", String.format("XBL3.0 x=%s;%s", this.userHash, this.xstsToken));
 
         String data = NetworkUtil.getDataWithJson("https://api.minecraftservices.com/authentication/login_with_xbox", root);
-        JsonObject json = new JsonParser().parse(data).getAsJsonObject();
+        JsonObject json = JsonParser.parseString(data).getAsJsonObject();
         this.mcToken = json.get("access_token").getAsString();
     }
 
@@ -203,7 +203,7 @@ public class MicrosoftLogin implements ILogin{
             throw new IllegalArgumentException("Fail to get Minecraft token");
 
         String data = NetworkUtil.getDataWithHeader("https://api.minecraftservices.com/minecraft/profile", Lists.newArrayList(Pair.of("Authorization", "Bearer " + this.mcToken)));
-        JsonObject json = new JsonParser().parse(data).getAsJsonObject();
+        JsonObject json = JsonParser.parseString(data).getAsJsonObject();
         if (json.has("error"))
             throw new IllegalMicrosoftAccountException();
         this.username = json.get("name").getAsString();
@@ -223,7 +223,7 @@ public class MicrosoftLogin implements ILogin{
         map.add(Pair.of("scope", "service::user.auth.xboxlive.com::MBI_SSL"));
 
         String data = NetworkUtil.getDataWithForm("https://login.live.com/oauth20_token.srf", map);
-        JsonObject json = new JsonParser().parse(data).getAsJsonObject();
+        JsonObject json = JsonParser.parseString(data).getAsJsonObject();
         this.accessToken = json.get("access_token").getAsString();
         this.refreshToken = json.get("refresh_token").getAsString();
     }

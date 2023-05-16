@@ -34,7 +34,7 @@ public class AccountManager {
         if (AccountManager.CURRENT == null)
             type = "Error";
         else
-            type = AccountManager.CURRENT.getType().getName();
+            type = AccountManager.CURRENT.getType().getName() + (AccountManager.CURRENT.getAlias().equals("") ? ("") : (" - " + AccountManager.CURRENT.getAlias()));
         return Text.translatable("as.titleScreen.nowUse", client.getSession().getUsername(), type);
     }
 
@@ -45,9 +45,9 @@ public class AccountManager {
             for (JsonElement ele : json) {
                 JsonObject obj = ele.getAsJsonObject();
                 Account.AccountType type = Account.AccountType.getByName(obj.get("type").getAsString());
-                if (type == Account.AccountType.Offline){
+                if (type == Account.AccountType.Offline) {
                     AuthRequest request = new AuthRequest();
-                    request.name=obj.get("username").getAsString();
+                    request.name = obj.get("username").getAsString();
                     this.accounts.add(new OfflineLogin().doAuth(request));
                 } else if (type == Account.AccountType.Microsoft) {
                     String accessToken = obj.get("accessToken").getAsString();
@@ -60,7 +60,8 @@ public class AccountManager {
                     String username = obj.get("username").getAsString();
                     String uuid = obj.get("uuid").getAsString();
                     String injectorServer = obj.get("injectorServer").getAsString();
-                    Account a = new Account(type, accessToken, "", username, uuid);
+                    String alias = obj.get("alias").getAsString();
+                    Account a = new Account(type, accessToken, "", username, uuid, alias);
                     a.setInjectorServer(injectorServer);
                     this.accounts.add(a);
 
@@ -89,6 +90,7 @@ public class AccountManager {
                     obj.addProperty("username", account.getUsername());
                     obj.addProperty("uuid", account.getUuid());
                     obj.addProperty("injectorServer", account.getInjectorServer());
+                    obj.addProperty("alias", account.getAlias());
                 }
                 array.add(obj);
             }

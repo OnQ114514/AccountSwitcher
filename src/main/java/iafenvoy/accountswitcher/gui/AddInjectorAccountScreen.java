@@ -12,7 +12,7 @@ import net.minecraft.text.Text;
 public class AddInjectorAccountScreen extends Screen {
     private static final MinecraftClient client = MinecraftClient.getInstance();
     private final AccountScreen parent;
-    private TextFieldWidget server, username, password;
+    private TextFieldWidget server, username, password, alias;
     private final Account account;
 
     public AddInjectorAccountScreen(AccountScreen parent) {
@@ -34,19 +34,27 @@ public class AddInjectorAccountScreen extends Screen {
         super.init();
         this.server = (TextFieldWidget) this.addField(new TextFieldWidget(client.textRenderer, this.width / 2 - 100, this.height / 2 - 50, 200, 20, Text.literal(this.account == null ? "" : this.account.getInjectorServer())));
         this.username = (TextFieldWidget) this.addField(new TextFieldWidget(client.textRenderer, this.width / 2 - 100, this.height / 2 - 25, 200, 20, Text.literal(this.account == null ? "" : this.account.getUsername())));
-        this.password = (TextFieldWidget) this.addField(new TextFieldWidget(client.textRenderer, this.width / 2 - 100, this.height / 2, 200, 20, Text.literal(this.account == null ? "" : this.account.getAccessToken())));
-        this.addField(new ButtonWidget(this.width / 2 - 100, this.height / 2 + 25, 100, 20, Text.translatable("as.gui.Accept"), button -> {
+        this.password = (TextFieldWidget) this.addField(new TextFieldWidget(client.textRenderer, this.width / 2 - 100, this.height / 2 , 200, 20, Text.literal(this.account == null ? "" : this.account.getAccessToken())));
+        this.alias = (TextFieldWidget) this.addField(new TextFieldWidget(client.textRenderer, this.width / 2 - 100, this.height / 2 + 25, 200, 20, Text.literal(this.account == null ? "" : this.account.getAccessToken())));
+
+        server.setMaxLength(128);
+        username.setMaxLength(64);
+        password.setMaxLength(64);
+        alias.setMaxLength(128);
+
+        this.addField(new ButtonWidget(this.width / 2 - 100, this.height / 2 + 50, 100, 20, Text.translatable("as.gui.Accept"), button -> {
             new Thread(() -> {
                 if (account == null) {
                     Account a = new Account(Account.AccountType.Injector);
-                    if (parent.injectorLogin.doLogin(a, this.server.getText(), this.username.getText(), this.password.getText()))
+                    if (parent.injectorLogin.doLogin(a, this.server.getText(), this.username.getText(), this.password.getText(), this.alias.getText()))
                         parent.addAccount(a);
-                } else
-                    parent.injectorLogin.doLogin(account, this.server.getText(), this.username.getText(), this.password.getText());
+                } else {
+                    parent.injectorLogin.doLogin(account, this.server.getText(), this.username.getText(), this.password.getText(), this.alias.getText());
+                }
             }).start();
             this.openParent();
         }));
-        this.addField(new ButtonWidget(this.width / 2, this.height / 2 + 25, 100, 20, Text.translatable("as.gui.Cancel"), button -> this.openParent()));
+        this.addField(new ButtonWidget(this.width / 2, this.height / 2 + 50, 100, 20, Text.translatable("as.gui.Cancel"), button -> this.openParent()));
 
     }
 
@@ -56,6 +64,7 @@ public class AddInjectorAccountScreen extends Screen {
         client.textRenderer.drawWithShadow(matrices, Text.translatable("as.gui.injector.label1"), this.width / 2.0F - 175, this.height / 2.0F - 45, 16777215);
         client.textRenderer.drawWithShadow(matrices, Text.translatable("as.gui.injector.label2"), this.width / 2.0F - 175, this.height / 2.0F - 20, 16777215);
         client.textRenderer.drawWithShadow(matrices, Text.translatable("as.gui.injector.label3"), this.width / 2.0F - 175, this.height / 2.0F + 5, 16777215);
+        client.textRenderer.drawWithShadow(matrices, Text.translatable("as.gui.injector.label4"), this.width / 2.0F - 175, this.height / 2.0F + 30, 16777215);
         drawCenteredText(matrices, textRenderer, this.title, this.width / 2, this.height / 2 - 70, 16777215);
         super.render(matrices, mouseX, mouseY, delta);
     }

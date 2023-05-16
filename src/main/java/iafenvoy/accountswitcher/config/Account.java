@@ -26,6 +26,7 @@ public class Account {
     private String accessToken = "", refreshToken = "", mcToken = "";
     private String username = "", uuid = "";
     private String injectorServer = "";
+    private String alias = "";
 
     public Account() {
         this.type = null;
@@ -36,11 +37,16 @@ public class Account {
     }
 
     public Account(AccountType type, String accessToken, String refreshToken, String username, String uuid) {
+        this(type, accessToken, refreshToken, username, uuid, "");
+    }
+
+    public Account(AccountType type, String accessToken, String refreshToken, String username, String uuid, String alias) {
         this.type = type;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.username = username;
         this.uuid = uuid;
+        this.alias = alias;
     }
 
     public AccountType getType() {
@@ -87,6 +93,14 @@ public class Account {
         this.uuid = uuid;
     }
 
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
     public void setInjectorServer(String injectorServer) {
         this.injectorServer = injectorServer;
     }
@@ -101,7 +115,7 @@ public class Account {
             }).start();
         else if (this.type == AccountType.Injector)
             new Thread(() -> {
-                screen.injectorLogin.doLogin(this, injectorServer, username, accessToken);
+                screen.injectorLogin.doLogin(this, injectorServer, username, accessToken, alias);
                 YggdrasilAuthenticationService services = new LocalYggdrasilAuthenticationService(((MinecraftClientAccessor) client).getNetProxy(), this.injectorServer);
                 this.applyServices(services, true);
                 AccountManager.CURRENT = this;
@@ -143,7 +157,7 @@ public class Account {
         if (this.type == AccountType.Microsoft)
             new Thread(() -> screen.microsoftLogin.refreshAccessToken(this)).start();
         if (this.type == AccountType.Injector)
-            new Thread(() -> screen.injectorLogin.doLogin(this, injectorServer, username, accessToken)).start();
+            new Thread(() -> screen.injectorLogin.doLogin(this, injectorServer, username, accessToken, alias)).start();
     }
 
     @Override

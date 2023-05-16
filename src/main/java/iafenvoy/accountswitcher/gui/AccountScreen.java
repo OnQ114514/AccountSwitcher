@@ -87,7 +87,7 @@ public class AccountScreen extends Screen {
         if (microsoftLogin.getProcess() != null)
             drawCenteredText(matrices, textRenderer, Text.of(microsoftLogin.getProcess()), this.width / 2, this.height - 14, 16777215);
         if (injectorLogin.getProcess() != null)
-            drawCenteredText(matrices, textRenderer, Text.of(microsoftLogin.getProcess()), this.width / 2, this.height - 14, 16777215);
+            drawCenteredText(matrices, textRenderer, Text.of(injectorLogin.getProcess()), this.width / 2, this.height - 14, 16777215);
         super.render(matrices, mouseX, mouseY, delta);
     }
 
