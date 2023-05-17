@@ -2,7 +2,7 @@
   "as.gui.title": "切换账号",
   "as.gui.AddOffline": "添加离线账号",
   "as.gui.AddMicrosoft": "添加微软账号",
-  "as.gui.AddInjector": "添加外置登录",
+  "as.gui.AddInjector": "添加外置账号",
   "as.gui.AddCustom": "添加自定义账号",
   "as.gui.DeleteAccount": "删除账号",
   "as.gui.UseAccount": "使用此账号",
@@ -27,5 +27,6 @@
   "as.gui.custom.label1": "玩家名",
   "as.gui.custom.label2": "UUID",
   "as.gui.custom.label3": "Token",
+  "as.gui.custom.label4": "备注",
   "compat.as.bobby": "错误：渲染器和Bobby冲突"
 }

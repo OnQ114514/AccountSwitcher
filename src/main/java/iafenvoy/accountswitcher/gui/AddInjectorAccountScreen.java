@@ -65,6 +65,7 @@ public class AddInjectorAccountScreen extends Screen {
         client.textRenderer.drawWithShadow(matrices, Text.translatable("as.gui.injector.label2"), this.width / 2.0F - 175, this.height / 2.0F - 20, 16777215);
         client.textRenderer.drawWithShadow(matrices, Text.translatable("as.gui.injector.label3"), this.width / 2.0F - 175, this.height / 2.0F + 5, 16777215);
         client.textRenderer.drawWithShadow(matrices, Text.translatable("as.gui.injector.label4"), this.width / 2.0F - 175, this.height / 2.0F + 30, 16777215);
+
         drawCenteredText(matrices, textRenderer, this.title, this.width / 2, this.height / 2 - 70, 16777215);
         super.render(matrices, mouseX, mouseY, delta);
     }

@@ -27,5 +27,6 @@
   "as.gui.custom.label1": "Player Name",
   "as.gui.custom.label2": "UUID",
   "as.gui.custom.label3": "Token",
+  "as.gui.custom.label4": "Alias",
   "compat.as.bobby": "Error: the renderer conflicts with Bobby!"
 }

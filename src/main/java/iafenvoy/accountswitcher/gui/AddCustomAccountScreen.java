@@ -12,7 +12,7 @@ import net.minecraft.text.Text;
 public class AddCustomAccountScreen extends Screen {
     private static final MinecraftClient client = MinecraftClient.getInstance();
     private final AccountScreen parent;
-    private TextFieldWidget username, uuid, token;
+    private TextFieldWidget username, uuid, token, alias;
 
     public AddCustomAccountScreen(AccountScreen parent) {
         super(Text.translatable("as.gui.custom.title"));
@@ -29,18 +29,25 @@ public class AddCustomAccountScreen extends Screen {
         this.username = (TextFieldWidget) this.addField(new TextFieldWidget(client.textRenderer, this.width / 2 - 100, this.height / 2 - 50, 200, 20, Text.translatable("")));
         this.uuid = (TextFieldWidget) this.addField(new TextFieldWidget(client.textRenderer, this.width / 2 - 100, this.height / 2 - 25, 200, 20, Text.translatable("")));
         this.token = (TextFieldWidget) this.addField(new TextFieldWidget(client.textRenderer, this.width / 2 - 100, this.height / 2, 200, 20, Text.translatable("")));
+        this.alias = (TextFieldWidget) this.addField(new TextFieldWidget(client.textRenderer, this.width / 2 - 100, this.height / 2 + 25, 200, 20, Text.translatable("")));
+
+        this.username.setMaxLength(64);
+        this.username.setMaxLength(64);
         this.token.setMaxLength(1000);
-        this.addField(new ButtonWidget(this.width / 2 - 100, this.height / 2 + 25, 100, 20, Text.translatable("as.gui.Accept"), button -> {
+        this.alias.setMaxLength(128);
+
+        this.addField(new ButtonWidget(this.width / 2 - 100, this.height / 2 + 50, 100, 20, Text.translatable("as.gui.Accept"), button -> {
             new Thread(() -> {
                 Account account = new Account(Account.AccountType.Custom);
                 account.setUsername(this.username.getText());
                 account.setUuid(this.uuid.getText());
                 account.setMcToken(this.token.getText());
+                account.setAlias(this.alias.getText());
                 this.parent.addAccount(account);
             }).start();
             this.openParent();
         }));
-        this.addField(new ButtonWidget(this.width / 2, this.height / 2 + 25, 100, 20, Text.translatable("as.gui.Cancel"), button -> this.openParent()));
+        this.addField(new ButtonWidget(this.width / 2, this.height / 2 + 50, 100, 20, Text.translatable("as.gui.Cancel"), button -> this.openParent()));
 
     }
 
@@ -50,6 +57,8 @@ public class AddCustomAccountScreen extends Screen {
         client.textRenderer.drawWithShadow(matrices, Text.translatable("as.gui.custom.label1"), this.width / 2.0F - 175, this.height / 2.0F - 45, 16777215);
         client.textRenderer.drawWithShadow(matrices, Text.translatable("as.gui.custom.label2"), this.width / 2.0F - 175, this.height / 2.0F - 20, 16777215);
         client.textRenderer.drawWithShadow(matrices, Text.translatable("as.gui.custom.label3"), this.width / 2.0F - 175, this.height / 2.0F + 5, 16777215);
+        client.textRenderer.drawWithShadow(matrices, Text.translatable("as.gui.custom.label4"), this.width / 2.0F - 175, this.height / 2.0F + 30, 16777215);
+
         drawCenteredText(matrices, textRenderer, this.title, this.width / 2, this.height / 2 - 70, 16777215);
         super.render(matrices, mouseX, mouseY, delta);
     }

@@ -19,7 +19,6 @@ public class AccountScreen extends Screen {
     public final InjectorLogin injectorLogin = new InjectorLogin();
     private final Screen parent;
     private AccountListWidget widget;
-    private boolean initialized = false;
 
     public AccountScreen(Screen parent) {
         super(Text.translatable("as.gui.title"));
@@ -33,13 +32,8 @@ public class AccountScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        if (this.initialized)
-            this.widget.updateSize(100, this.width - 80, 32, this.height - 32);
-        else {
-            this.initialized = true;
-            this.widget = new AccountListWidget(this, client, 100, this.width - 80, 32, this.height - 32, 36);
-            this.widget.setAccount(AccountManager.INSTANCE.getAccounts());
-        }
+        this.widget = new AccountListWidget(this, client, 100, this.width - 80, 32, this.height - 32, 36);
+        this.widget.setAccount(AccountManager.INSTANCE.getAccounts());
         this.addSelectableChild(this.widget);
 
         this.addField(new ButtonWidget(10, 15, 80, 20, Text.translatable("as.gui.Close"), button -> this.openParent()));
@@ -68,6 +62,7 @@ public class AccountScreen extends Screen {
         this.addField(new ButtonWidget(10, 180, 80, 20, Text.translatable("as.gui.DeleteAccount"), button -> {
             if (this.widget.getSelectedOrNull() != null && this.widget.getSelectedOrNull() instanceof AccountListWidget.AccountEntry)
                 AccountManager.INSTANCE.deleteAccount(((AccountListWidget.AccountEntry) this.widget.getSelectedOrNull()).getAccount());
+            AccountManager.INSTANCE.save();
             this.refreshWidget();
         }));
     }

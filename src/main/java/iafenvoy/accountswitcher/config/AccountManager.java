@@ -1,12 +1,10 @@
 package iafenvoy.accountswitcher.config;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import iafenvoy.accountswitcher.login.AuthRequest;
 import iafenvoy.accountswitcher.login.OfflineLogin;
 import iafenvoy.accountswitcher.utils.FileUtil;
+import iafenvoy.accountswitcher.utils.StringUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -42,6 +40,7 @@ public class AccountManager {
         try {
             String data = FileUtil.readFile(FILE_PATH);
             JsonArray json = JsonParser.parseString(data).getAsJsonArray();
+
             for (JsonElement ele : json) {
                 JsonObject obj = ele.getAsJsonObject();
                 Account.AccountType type = Account.AccountType.getByName(obj.get("type").getAsString());
@@ -61,10 +60,9 @@ public class AccountManager {
                     String uuid = obj.get("uuid").getAsString();
                     String injectorServer = obj.get("injectorServer").getAsString();
                     String alias = obj.get("alias").getAsString();
-                    Account a = new Account(type, accessToken, "", username, uuid, alias);
+                    Account a = new Account(type, accessToken, "", username, uuid, StringUtil.unicodeToString(alias));
                     a.setInjectorServer(injectorServer);
                     this.accounts.add(a);
-
                 }
             }
         } catch (Exception e) {
@@ -90,11 +88,11 @@ public class AccountManager {
                     obj.addProperty("username", account.getUsername());
                     obj.addProperty("uuid", account.getUuid());
                     obj.addProperty("injectorServer", account.getInjectorServer());
-                    obj.addProperty("alias", account.getAlias());
+                    obj.addProperty("alias", StringUtil.stringToUnicode(account.getAlias()));
                 }
                 array.add(obj);
             }
-            FileUtil.saveFile(FILE_PATH, array.toString());
+            FileUtil.saveFile(FILE_PATH, StringUtil.prettyJson(array));
         } catch (Exception e) {
             e.printStackTrace();
         }
