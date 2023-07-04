@@ -6,10 +6,10 @@ import iafenvoy.accountswitcher.login.OfflineLogin;
 import iafenvoy.accountswitcher.utils.ButtonWidget;
 import iafenvoy.accountswitcher.utils.IllegalMicrosoftAccountException;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 public class AddOfflineAccountScreen extends Screen {
@@ -30,7 +30,7 @@ public class AddOfflineAccountScreen extends Screen {
             if (this.usernameField.getText().equals("")) return;
             AuthRequest request=new AuthRequest();
             request.name=this.usernameField.getText();
-            Account account = null;
+            Account account;
             try {
                 account = new OfflineLogin().doAuth(request);
             } catch (IllegalMicrosoftAccountException e) {
@@ -47,10 +47,10 @@ public class AddOfflineAccountScreen extends Screen {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.renderBackground(matrices);
-        drawCenteredText(matrices, textRenderer, this.title, this.width / 2, this.height / 2 - 50, 16777215);
-        super.render(matrices, mouseX, mouseY, delta);
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.renderBackground(context);
+        context.drawCenteredTextWithShadow(textRenderer, this.title, this.width / 2, this.height / 2 - 50, 16777215);
+        super.render(context, mouseX, mouseY, delta);
     }
 
     public ClickableWidget addField(ClickableWidget drawable) {

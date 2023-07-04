@@ -2,8 +2,9 @@ package iafenvoy.accountswitcher.gui;
 
 import iafenvoy.accountswitcher.config.Account;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 
@@ -70,12 +71,20 @@ public class AccountListWidget extends AlwaysSelectedEntryListWidget<AccountList
         }
 
         @Override
-        public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            client.textRenderer.draw(matrices, this.account.getUsername(), (float) (x + 32 + 3), (float) (y + 1), 16777215);
-            client.textRenderer.draw(matrices,
-                    this.account.getType().getName() + (this.account.getAlias().equals("") ? ("") : (" - " + this.account.getAlias())),
-                    (float) (x + 32 + 3), (float) (y + 1 + 9), 16777215);
-            client.textRenderer.draw(matrices, this.account.getUuid(), (float) (x + 32 + 3), (float) (y + 1 + 18), 16777215);
+        public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            // 用户名
+            client.textRenderer.draw(this.account.getUsername(), (float) (x + 32 + 3), (float) (y + 1), 16777215, false,
+                    context.getMatrices().peek().getPositionMatrix(), context.getVertexConsumers(), TextRenderer.TextLayerType.NORMAL,
+                    0, 15728880);
+            // 登录类型
+            client.textRenderer.draw(this.account.getType().getName() + ("".equals(this.account.getAlias()) ? ("") : (" - " + this.account.getAlias())),
+                    (float) (x + 32 + 3), (float) (y + 1 + 9), 16777215, false,
+                    context.getMatrices().peek().getPositionMatrix(), context.getVertexConsumers(), TextRenderer.TextLayerType.NORMAL,
+                    0, 15728880);
+            // UUID
+            client.textRenderer.draw(this.account.getUuid(), (float) (x + 32 + 3), (float) (y + 1 + 18), 16777215, false,
+                    context.getMatrices().peek().getPositionMatrix(), context.getVertexConsumers(), TextRenderer.TextLayerType.NORMAL,
+                    0, 15728880);
         }
 
         @Override

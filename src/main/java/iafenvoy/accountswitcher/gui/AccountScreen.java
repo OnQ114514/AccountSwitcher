@@ -4,13 +4,13 @@ import iafenvoy.accountswitcher.config.Account;
 import iafenvoy.accountswitcher.config.AccountManager;
 import iafenvoy.accountswitcher.login.InjectorLogin;
 import iafenvoy.accountswitcher.login.MicrosoftLogin;
+import iafenvoy.accountswitcher.utils.ButtonWidget;
 import iafenvoy.accountswitcher.utils.IllegalMicrosoftAccountException;
 import iafenvoy.accountswitcher.utils.ToastUtil;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import iafenvoy.accountswitcher.utils.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 public class AccountScreen extends Screen {
@@ -74,16 +74,18 @@ public class AccountScreen extends Screen {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.renderBackground(matrices);
-        this.widget.render(matrices, mouseX, mouseY, delta);
-        drawCenteredText(matrices, textRenderer, this.title, this.width / 2, 20, 16777215);
-        drawCenteredText(matrices, textRenderer, AccountManager.getAccountInfoText(), this.width / 2, this.height - 26, 16777215);
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.renderBackground(context);
+        this.widget.render(context, mouseX, mouseY, delta);
+
+        context.drawCenteredTextWithShadow(textRenderer, this.title, this.width / 2, 20, 16777215);
+        context.drawCenteredTextWithShadow(textRenderer, AccountManager.getAccountInfoText(), this.width / 2, this.height - 26, 16777215);
         if (microsoftLogin.getProcess() != null)
-            drawCenteredText(matrices, textRenderer, Text.of(microsoftLogin.getProcess()), this.width / 2, this.height - 14, 16777215);
+            context.drawCenteredTextWithShadow(textRenderer, Text.of(microsoftLogin.getProcess()), this.width / 2, this.height - 14, 16777215);
         if (injectorLogin.getProcess() != null)
-            drawCenteredText(matrices, textRenderer, Text.of(injectorLogin.getProcess()), this.width / 2, this.height - 14, 16777215);
-        super.render(matrices, mouseX, mouseY, delta);
+            context.drawCenteredTextWithShadow(textRenderer, Text.of(injectorLogin.getProcess()), this.width / 2, this.height - 14, 16777215);
+
+        super.render(context, mouseX, mouseY, delta);
     }
 
     public void refreshWidget() {
