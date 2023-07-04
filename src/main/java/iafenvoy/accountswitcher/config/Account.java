@@ -112,6 +112,7 @@ public class Account {
                 YggdrasilAuthenticationService services = new YggdrasilAuthenticationService(((MinecraftClientAccessor) client).getNetProxy());
                 this.applyServices(services, false);
                 AccountManager.CURRENT = this;
+                client.setScreen(AccountScreen.MAIN_PAGE);
             }).start();
         else if (this.type == AccountType.Injector)
             new Thread(() -> {
@@ -119,11 +120,13 @@ public class Account {
                 YggdrasilAuthenticationService services = new LocalYggdrasilAuthenticationService(((MinecraftClientAccessor) client).getNetProxy(), this.injectorServer);
                 this.applyServices(services, true);
                 AccountManager.CURRENT = this;
+                client.setScreen(AccountScreen.MAIN_PAGE);
             }).start();
         else {
             Session session = new Session(this.username, this.uuid, this.mcToken, Optional.empty(), Optional.empty(), Session.AccountType.MOJANG);
             ((MinecraftClientAccessor) client).setSession(session);
             AccountManager.CURRENT = this;
+            client.setScreen(AccountScreen.MAIN_PAGE);
         }
     }
 

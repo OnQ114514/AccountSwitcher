@@ -15,6 +15,7 @@ import net.minecraft.text.Text;
 
 public class AccountScreen extends Screen {
     private static final MinecraftClient client = MinecraftClient.getInstance();
+    public static final Screen MAIN_PAGE = client.currentScreen;
     public final MicrosoftLogin microsoftLogin = new MicrosoftLogin();
     public final InjectorLogin injectorLogin = new InjectorLogin();
     private final Screen parent;
