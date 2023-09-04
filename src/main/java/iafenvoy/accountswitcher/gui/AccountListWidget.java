@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class AccountListWidget extends AlwaysSelectedEntryListWidget<AccountListWidget.Entry> {
     private final AccountScreen screen;
@@ -49,7 +50,7 @@ public class AccountListWidget extends AlwaysSelectedEntryListWidget<AccountList
     @Override
     public void setSelected(@Nullable AccountListWidget.Entry entry) {
         super.setSelected(entry);
-//        client.getNarratorManager().narrate((Text.translatable("narrator.select", ((AccountEntry) Objects.requireNonNull(this.getSelectedOrNull())).account.getUsername())).getString());
+        client.getNarratorManager().narrate((Text.translatable("narrator.select", ((AccountEntry) Objects.requireNonNull(this.getSelectedOrNull())).account.getUsername())).getString());
     }
 
     @Override

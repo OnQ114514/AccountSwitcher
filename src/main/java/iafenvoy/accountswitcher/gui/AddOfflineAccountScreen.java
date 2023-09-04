@@ -28,8 +28,8 @@ public class AddOfflineAccountScreen extends Screen {
         this.usernameField = (TextFieldWidget) this.addField(new TextFieldWidget(client.textRenderer, this.width / 2 - 100, this.height / 2 - 30, 200, 20, Text.empty()));
         this.addField(new ButtonWidget(this.width / 2 - 100, this.height / 2 + 10, 100, 20, Text.translatable("as.gui.Accept"), button -> {
             if (this.usernameField.getText().equals("")) return;
-            AuthRequest request=new AuthRequest();
-            request.name=this.usernameField.getText();
+            AuthRequest request = new AuthRequest();
+            request.name = this.usernameField.getText();
             Account account;
             try {
                 account = new OfflineLogin().doAuth(request);

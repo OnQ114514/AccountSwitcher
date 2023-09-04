@@ -1,10 +1,20 @@
 package iafenvoy.accountswitcher.config;
 
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import iafenvoy.accountswitcher.gui.AccountScreen;
+import iafenvoy.accountswitcher.gui.AddCustomAccountScreen;
+import iafenvoy.accountswitcher.gui.AddInjectorAccountScreen;
+import iafenvoy.accountswitcher.gui.AddOfflineAccountScreen;
 import iafenvoy.accountswitcher.login.AuthRequest;
+import iafenvoy.accountswitcher.login.MicrosoftLogin;
 import iafenvoy.accountswitcher.login.OfflineLogin;
 import iafenvoy.accountswitcher.utils.FileUtil;
+import iafenvoy.accountswitcher.utils.IllegalMicrosoftAccountException;
 import iafenvoy.accountswitcher.utils.StringUtil;
+import iafenvoy.accountswitcher.utils.ToastUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +42,7 @@ public class AccountManager {
         if (AccountManager.CURRENT == null)
             type = "Error";
         else
-            type = AccountManager.CURRENT.getType().getName() + (AccountManager.CURRENT.getAlias().equals("") ? ("") : (" - " + AccountManager.CURRENT.getAlias()));
+            type = AccountManager.CURRENT.getType().getName() + ("".equals(AccountManager.CURRENT.getAlias()) ? ("") : (" - " + AccountManager.CURRENT.getAlias()));
         return Text.translatable("as.titleScreen.nowUse", client.getSession().getUsername(), type);
     }
 
@@ -120,6 +130,30 @@ public class AccountManager {
             }
         if (index >= 0)
             this.accounts.remove(index);
+    }
+
+    public void modifyAccount(Account account, AccountScreen parent) {
+        if (account.getType() == Account.AccountType.Microsoft) {
+            new Thread(() -> {
+                try {
+                    Account acc = new MicrosoftLogin().doAuth(null);
+                    if (acc != Account.EMPTY) {
+                        this.accounts.remove(account);
+                        this.addAccount(acc);
+                    }
+                } catch (IllegalMicrosoftAccountException e) {
+                    ToastUtil.showToast("as.toast.error.InvalidAccount", "as.toast.error.InvalidAccount.text");
+                } catch (Exception e) {
+                    ToastUtil.showToast("ERROR", e.getLocalizedMessage());
+                }
+            }, "Microsoft Login").start();
+        } else if (account.getType() == Account.AccountType.Injector) {
+            client.setScreen(new AddInjectorAccountScreen(parent, account));
+        } else if (account.getType() == Account.AccountType.Custom) {
+            client.setScreen(new AddCustomAccountScreen(parent, account));
+        } else if (account.getType() == Account.AccountType.Offline){
+            client.setScreen(new AddOfflineAccountScreen(parent));
+        }
     }
 
     public Account getAccountByUuid(String uuid) {

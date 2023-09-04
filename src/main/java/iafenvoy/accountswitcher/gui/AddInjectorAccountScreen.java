@@ -33,15 +33,20 @@ public class AddInjectorAccountScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        this.server = (TextFieldWidget) this.addField(new TextFieldWidget(client.textRenderer, this.width / 2 - 100, this.height / 2 - 50, 200, 20, Text.literal(this.account == null ? "" : this.account.getInjectorServer())));
-        this.username = (TextFieldWidget) this.addField(new TextFieldWidget(client.textRenderer, this.width / 2 - 100, this.height / 2 - 25, 200, 20, Text.literal(this.account == null ? "" : this.account.getUsername())));
-        this.password = (TextFieldWidget) this.addField(new TextFieldWidget(client.textRenderer, this.width / 2 - 100, this.height / 2 , 200, 20, Text.literal(this.account == null ? "" : this.account.getAccessToken())));
-        this.alias = (TextFieldWidget) this.addField(new TextFieldWidget(client.textRenderer, this.width / 2 - 100, this.height / 2 + 25, 200, 20, Text.literal(this.account == null ? "" : this.account.getAccessToken())));
+        this.server = (TextFieldWidget) this.addField(new TextFieldWidget(client.textRenderer, this.width / 2 - 100, this.height / 2 - 50, 200, 20, Text.translatable("")));
+        this.username = (TextFieldWidget) this.addField(new TextFieldWidget(client.textRenderer, this.width / 2 - 100, this.height / 2 - 25, 200, 20, Text.translatable("")));
+        this.password = (TextFieldWidget) this.addField(new TextFieldWidget(client.textRenderer, this.width / 2 - 100, this.height / 2, 200, 20, Text.translatable("")));
+        this.alias = (TextFieldWidget) this.addField(new TextFieldWidget(client.textRenderer, this.width / 2 - 100, this.height / 2 + 25, 200, 20, Text.translatable("")));
 
-        server.setMaxLength(128);
-        username.setMaxLength(64);
-        password.setMaxLength(64);
-        alias.setMaxLength(128);
+        this.server.setMaxLength(64);
+        this.username.setMaxLength(32);
+        this.password.setMaxLength(64);
+        this.alias.setMaxLength(128);
+
+        this.server.setText(this.account == null ? "" : this.account.getInjectorServer());
+        this.username.setText(this.account == null ? "" : this.account.getUsername());
+        this.password.setText(this.account == null ? "" : this.account.getAccessToken());
+        this.alias.setText(this.account == null ? "" : this.account.getAlias());
 
         this.addField(new ButtonWidget(this.width / 2 - 100, this.height / 2 + 50, 100, 20, Text.translatable("as.gui.Accept"), button -> {
             new Thread(() -> {

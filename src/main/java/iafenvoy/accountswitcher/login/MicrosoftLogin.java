@@ -157,7 +157,7 @@ public class MicrosoftLogin implements ILogin{
         String data = NetworkUtil.getDataWithJson("https://user.auth.xboxlive.com/user/authenticate", root);
         JsonObject json = JsonParser.parseString(data).getAsJsonObject();
         this.xblToken = json.get("Token").getAsString();
-        this.userHash = json.get("DisplayClaims").getAsJsonObject().get("xui").getAsJsonArray().get(0).getAsJsonObject().get("uhs").getAsString();
+        this.userHash = json.getAsJsonObject("DisplayClaims").getAsJsonArray("xui").get(0).getAsJsonObject().get("uhs").getAsString();
     }
 
     //第四步：XSTS身份验证  POST https://xsts.auth.xboxlive.com/xsts/authorize

@@ -14,10 +14,17 @@ public class AddCustomAccountScreen extends Screen {
     private static final MinecraftClient client = MinecraftClient.getInstance();
     private final AccountScreen parent;
     private TextFieldWidget username, uuid, token, alias;
+    private final Account account;
 
     public AddCustomAccountScreen(AccountScreen parent) {
+        this(parent, null);
+    }
+
+    public AddCustomAccountScreen(AccountScreen parent, Account account) {
         super(Text.translatable("as.gui.custom.title"));
         this.parent = parent;
+        this.account = account;
+
     }
 
     public void openParent() {
@@ -33,9 +40,14 @@ public class AddCustomAccountScreen extends Screen {
         this.alias = (TextFieldWidget) this.addField(new TextFieldWidget(client.textRenderer, this.width / 2 - 100, this.height / 2 + 25, 200, 20, Text.translatable("")));
 
         this.username.setMaxLength(64);
-        this.username.setMaxLength(64);
+        this.uuid.setMaxLength(64);
         this.token.setMaxLength(1000);
         this.alias.setMaxLength(128);
+
+        this.username.setText(this.account == null ? "" : this.account.getUsername());
+        this.uuid.setText(this.account == null ? "" : this.account.getUuid());
+        this.token.setText(this.account == null ? "" : this.account.getAccessToken());
+        this.alias.setText(this.account == null ? "" : this.account.getAlias());
 
         this.addField(new ButtonWidget(this.width / 2 - 100, this.height / 2 + 50, 100, 20, Text.translatable("as.gui.Accept"), button -> {
             new Thread(() -> {

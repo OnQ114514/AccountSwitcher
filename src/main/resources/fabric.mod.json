@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "id": "account_switcher",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "name": "Account Switcher",
-  "description": "",
+  "description": "switch your account in game",
   "authors": [
     "IAFEnvoy",
     "ThymeChen"

@@ -15,7 +15,6 @@ import net.minecraft.text.Text;
 
 public class AccountScreen extends Screen {
     private static final MinecraftClient client = MinecraftClient.getInstance();
-    public static final Screen MAIN_PAGE = client.currentScreen;
     public final MicrosoftLogin microsoftLogin = new MicrosoftLogin();
     public final InjectorLogin injectorLogin = new InjectorLogin();
     private final Screen parent;
@@ -33,13 +32,15 @@ public class AccountScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        this.widget = new AccountListWidget(this, client, 100, this.width - 80, 32, this.height - 32, 36);
+        this.widget = new AccountListWidget(this, client, 100, this.width - 100, 32, this.height - 64, 36);
         this.widget.setAccount(AccountManager.INSTANCE.getAccounts());
         this.addSelectableChild(this.widget);
 
-        this.addField(new ButtonWidget(10, 15, 80, 20, Text.translatable("as.gui.Close"), button -> this.openParent()));
-        this.addField(new ButtonWidget(10, 35, 80, 20, Text.translatable("as.gui.AddOffline"), button -> client.setScreen(new AddOfflineAccountScreen(this))));
-        this.addField(new ButtonWidget(10, 55, 80, 20, Text.translatable("as.gui.AddMicrosoft"), button -> new Thread(() -> {
+        int spacing = 20;
+        this.addField(new ButtonWidget(10, spacing, 80, 20, Text.translatable("as.gui.Close"), button -> this.openParent()));
+
+        this.addField(new ButtonWidget(this.width - 90, spacing, 80, 20, Text.translatable("as.gui.AddOffline"), button -> client.setScreen(new AddOfflineAccountScreen(this))));
+        this.addField(new ButtonWidget(this.width - 90, 2 * spacing, 80, 20, Text.translatable("as.gui.AddMicrosoft"), button -> new Thread(() -> {
             try {
                 Account account = microsoftLogin.doAuth(null);
                 if (account != Account.EMPTY)
@@ -50,20 +51,27 @@ public class AccountScreen extends Screen {
                 ToastUtil.showToast("ERROR", e.getLocalizedMessage());
             }
         }, "Microsoft Login").start()));
-        this.addField(new ButtonWidget(10, 75, 80, 20, Text.translatable("as.gui.AddInjector"), button -> client.setScreen(new AddInjectorAccountScreen(this))));
-        this.addField(new ButtonWidget(10, 95, 80, 20, Text.translatable("as.gui.AddCustom"), button -> client.setScreen(new AddCustomAccountScreen(this))));
-        this.addField(new ButtonWidget(10, 115, 80, 20, Text.translatable("as.gui.UseAccount"), button -> {
+        this.addField(new ButtonWidget(this.width - 90, 3 * spacing, 80, 20, Text.translatable("as.gui.AddInjector"), button -> client.setScreen(new AddInjectorAccountScreen(this))));
+        this.addField(new ButtonWidget(this.width - 90, 4 * spacing, 80, 20, Text.translatable("as.gui.AddCustom"), button -> client.setScreen(new AddCustomAccountScreen(this))));
+
+        this.addField(new ButtonWidget(this.width / 2 - 90, this.height - 12 - 20, 180, 20, Text.translatable("as.gui.UseAccount"), button -> {
             if (this.widget.getSelectedOrNull() != null && this.widget.getSelectedOrNull() instanceof AccountListWidget.AccountEntry)
                 ((AccountListWidget.AccountEntry) this.widget.getSelectedOrNull()).getAccount().use(this);
         }));
-        this.addField(new ButtonWidget(10, 135, 80, 20, Text.translatable("as.gui.RefreshAccount"), button -> {
+
+        this.addField(new ButtonWidget(10, 2 * spacing, 80, 20, Text.translatable("as.gui.RefreshAccount"), button -> {
             if (this.widget.getSelectedOrNull() != null && this.widget.getSelectedOrNull() instanceof AccountListWidget.AccountEntry)
                 ((AccountListWidget.AccountEntry) this.widget.getSelectedOrNull()).getAccount().refresh(this);
         }));
-        this.addField(new ButtonWidget(10, 180, 80, 20, Text.translatable("as.gui.DeleteAccount"), button -> {
+        this.addField(new ButtonWidget(10, 3 * spacing, 80, 20, Text.translatable("as.gui.ModifyAccount"), button -> {
             if (this.widget.getSelectedOrNull() != null && this.widget.getSelectedOrNull() instanceof AccountListWidget.AccountEntry)
-                AccountManager.INSTANCE.deleteAccount(((AccountListWidget.AccountEntry) this.widget.getSelectedOrNull()).getAccount());
+                AccountManager.INSTANCE.modifyAccount(((AccountListWidget.AccountEntry) this.widget.getSelectedOrNull()).getAccount(), this);
             AccountManager.INSTANCE.save();
+            this.refreshWidget();
+        }));
+        this.addField(new ButtonWidget(10, 4 * spacing, 80, 20, Text.translatable("as.gui.DeleteAccount"), button -> {
+            if (this.widget.getSelectedOrNull() != null && this.widget.getSelectedOrNull() instanceof AccountListWidget.AccountEntry)
+                client.setScreen(new DeleteScreen(((AccountListWidget.AccountEntry) this.widget.getSelectedOrNull()).getAccount(), this));
             this.refreshWidget();
         }));
     }
@@ -80,11 +88,11 @@ public class AccountScreen extends Screen {
         this.widget.render(context, mouseX, mouseY, delta);
 
         context.drawCenteredTextWithShadow(textRenderer, this.title, this.width / 2, 20, 16777215);
-        context.drawCenteredTextWithShadow(textRenderer, AccountManager.getAccountInfoText(), this.width / 2, this.height - 26, 16777215);
+        context.drawCenteredTextWithShadow(textRenderer, AccountManager.getAccountInfoText(), this.width / 2, this.height - 56, 16777215);
         if (microsoftLogin.getProcess() != null)
-            context.drawCenteredTextWithShadow(textRenderer, Text.of(microsoftLogin.getProcess()), this.width / 2, this.height - 14, 16777215);
+            context.drawCenteredTextWithShadow(textRenderer, Text.of(microsoftLogin.getProcess()), this.width / 2, this.height - 44, 16777215);
         if (injectorLogin.getProcess() != null)
-            context.drawCenteredTextWithShadow(textRenderer, Text.of(injectorLogin.getProcess()), this.width / 2, this.height - 14, 16777215);
+            context.drawCenteredTextWithShadow(textRenderer, Text.of(injectorLogin.getProcess()), this.width / 2, this.height - 44, 16777215);
 
         super.render(context, mouseX, mouseY, delta);
     }
